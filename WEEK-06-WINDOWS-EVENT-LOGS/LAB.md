@@ -13,7 +13,7 @@ Learn how to investigate authentication attacks and privilege escalation using W
 ---
 
 ## LAB SCENARIO
-You are a SOC analyst. A workstation is showing repeated login failures followed by a successful login from the same source. Possible brute-force attack.
+You are a SOC analyst. A workstation shows repeated login failures followed by a successful login from the same source. Possible brute-force attack.
 
 ---
 
@@ -24,61 +24,55 @@ Get-WinEvent -LogName Security -MaxEvents 1000
 
 ---
 
-## STEP 2: FILTER FAILED LOGINS (BRUTE FORCE)
+## STEP 2: FILTER FAILED LOGINS (4625)
 ```powershell
 Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4625}
 ```
 
 ---
 
-## STEP 3: FILTER SUCCESSFUL LOGINS
+## STEP 3: FILTER SUCCESSFUL LOGINS (4624)
 ```powershell
 Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4624}
 ```
 
 ---
 
-## STEP 4: ANALYZE PATTERN
+## STEP 4: ANALYZE ATTACK PATTERN
 Look for:
-- Same IP repeating 4625 events
-- Followed by 4624 success event
-- Short time window between attempts
+- Same IP repeating failed attempts
+- Followed by successful authentication
+- Short time window between events
+
+Pattern:
+4625 → 4625 → 4625 → 4624
 
 ---
 
-## SIMULATED ATTACK PATTERN
-```
-4625 -> 4625 -> 4625 -> 4624
-```
-
----
-
-## STEP 5: BUILD TIMELINE
-Create a timeline of:
+## STEP 5: TIMELINE CONSTRUCTION
 - First failed attempt
-- Peak brute-force window
-- Successful login moment
+- Brute-force peak
+- Successful login event
 
 ---
 
 ## INVESTIGATION OUTPUT
-You must document:
-- Source IP address
-- Target username
-- Time window of attack
-- Whether compromise is confirmed
+- Source IP
+- Target user
+- Attack duration
+- Compromise confirmation
 
 ---
 
-## SOC ANALYST REPORT (EXPECTED)
+## SOC REPORT DELIVERABLE
 - Incident summary
-- Attack classification (Brute Force / Credential Stuffing)
+- Attack classification
 - Evidence (Event IDs)
-- Recommended action (account lock, IP block)
+- Recommended response actions
 
 ---
 
-## SKILL GAINED
-- Windows log interpretation
-- Authentication attack detection
-- Timeline reconstruction
+## SKILL OUTCOME
+- Windows log analysis
+- Brute-force detection
+- Incident timeline reconstruction
